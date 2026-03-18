@@ -1,0 +1,72 @@
+#INSTAGRAM
+CREATE 
+(Anna_Giuffrida:Person {name: "Anna"}),
+(Luca_Messina:Person {name: "Luca"}),
+(Marco_Barbagallo:Person {name: "Marco"}),
+(Giulia_Catania:Person {name: "Giulia"}),
+(Elena_Russo:Person {name: "Elena"})
+
+
+MATCH 
+(a:Person {name: "Anna"}),
+(l:Person {name: "Luca"}),
+(m:Person {name: "Marco"})
+CREATE 
+(a)-[:SEGUE]->(l),
+(a)-[:SEGUE]->(m);
+
+MATCH 
+(m:Person {name: "Marco"}),
+(a:Person {name: "Anna"})
+CREATE 
+(m)-[:SEGUE]->(a);
+
+MATCH
+(g:Person {name: "Giulia"}),
+(a:Person {name: "Anna"}),
+(l:Person {name: "Luca"}),
+(m:Person {name: "Marco"}),
+(e:Person {name: "Elena"})
+CREATE
+(g)-[:SEGUE]->(a),
+(g)-[:SEGUE]->(l),
+(g)-[:SEGUE]->(m),
+(g)-[:SEGUE]->(e);
+
+
+MATCH (u:Person)<-[:SEGUE]-(f)
+WITH u, COUNT(f) AS followers
+WHERE followers > 1
+RETURN u.name, followers;
+
+
+MATCH (u:Person)
+WHERE NOT (u)-[:SEGUE]->()
+RETURN u.name;
+
+
+
+#FACEBOOK
+CREATE 
+(:Person {name: "Alice"}),
+(:Person {name: "Bob"}),
+(:Person {name: "Carol"}),
+(:Person {name: "Dan"});
+
+
+MATCH (a:Person {name: "Alice"}), (b:Person {name: "Bob"})
+CREATE (a)-[:AMICO]->(b),
+       (b)-[:AMICO]->(a);
+
+MATCH (b:Person {name: "Bob"}), (d:Person {name: "Dan"})
+CREATE (b)-[:AMICO]->(d),
+       (d)-[:AMICO]->(b);
+
+MATCH (a:Person {name: "Alice"}), (c:Person {name: "Carol"})
+CREATE (a)-[:AMICO]->(c),
+       (c)-[:AMICO]->(a);
+
+MATCH (a:Person)-[:AMICO]->(b:Person)
+WHERE a.name < b.name
+RETURN a.name, b.name;
+    
